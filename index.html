@@ -180,17 +180,11 @@ button {
 
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <input type="text" id="indName" placeholder="이름 (예: 민수)" style="width:130px">
-    <span style="font-size:.85rem;color:#b0c4a0">의 알려진 속성:</span>
+    <span style="font-size:.85rem;color:#b0c4a0">의 알려진 속성 선택:</span>
   </div>
 
-  <div>
-    <div class="prop-tags" id="propTags">
-      <div class="empty-msg">속성을 추가하세요</div>
-    </div>
-    <div style="display:flex;gap:6px;margin-top:8px">
-      <input type="text" id="newProp" placeholder="속성 입력 (예: 안경씀)" style="width:180px">
-      <button class="btn-add" onclick="addProp()">+ 속성 추가</button>
-    </div>
+  <div id="propChecks">
+    <div class="empty-msg">규칙을 먼저 정의하면 속성이 여기 표시됩니다</div>
   </div>
 
   <button class="btn-main" onclick="doInfer()" style="align-self:flex-start">▶ 추론하기</button>
@@ -206,7 +200,6 @@ button {
 'use strict';
 
 let rules = []; // {type:'all'|'some', A, B}
-let knownProps = []; // string[]
 
 // ── 규칙 추가 ──────────────────────────────────────────────────────
 function addRule() {
@@ -220,9 +213,28 @@ function addRule() {
   document.getElementById('ruleA').value = '';
   document.getElementById('ruleB').value = '';
   renderRules();
+  renderPropChecks();
 }
 
-function delRule(i) { rules.splice(i, 1); renderRules(); }
+function delRule(i) { rules.splice(i, 1); renderRules(); renderPropChecks(); }
+
+// 규칙에 등장한 속성 전체를 체크박스로 표시
+function renderPropChecks() {
+  const el = document.getElementById('propChecks');
+  const all = new Set();
+  rules.forEach(r => { all.add(r.A); all.add(r.B); });
+  if (!all.size) {
+    el.innerHTML = '<div class="empty-msg">규칙을 먼저 정의하면 속성이 여기 표시됩니다</div>';
+    return;
+  }
+  el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px">` +
+    [...all].map(p => `
+      <label style="display:flex;align-items:center;gap:5px;background:#4d6646;padding:5px 12px;border-radius:14px;font-size:.85rem;cursor:pointer">
+        <input type="checkbox" value="${p}" style="accent-color:#e8a0aa;width:15px;height:15px">
+        ${p}
+      </label>`).join('') +
+    `</div>`;
+}
 
 function renderRules() {
   const el = document.getElementById('ruleList');
@@ -246,40 +258,16 @@ function renderRules() {
   }).join('');
 }
 
-// ── 속성 추가 ──────────────────────────────────────────────────────
-function addProp() {
-  const v = document.getElementById('newProp').value.trim();
-  if (!v) return;
-  if (knownProps.includes(v)) { alert('이미 추가된 속성입니다'); return; }
-  knownProps.push(v);
-  document.getElementById('newProp').value = '';
-  renderProps();
-}
-
-function delProp(p) {
-  knownProps = knownProps.filter(x => x !== p);
-  renderProps();
-}
-
-function renderProps() {
-  const el = document.getElementById('propTags');
-  if (!knownProps.length) { el.innerHTML = '<div class="empty-msg">속성을 추가하세요</div>'; return; }
-  el.innerHTML = knownProps.map(p => `
-    <span class="prop-tag">
-      ${p}
-      <span class="prop-tag-del" onclick="delProp('${p}')">✕</span>
-    </span>`).join('');
-}
-
 // ── 추론 ──────────────────────────────────────────────────────────
 function doInfer() {
   const name = document.getElementById('indName').value.trim() || '이 개체';
-  if (!knownProps.length) { alert('알려진 속성을 입력해주세요'); return; }
+  const checked = [...document.querySelectorAll('#propChecks input:checked')].map(el => el.value);
+  if (!checked.length) { alert('알려진 속성을 하나 이상 선택해주세요'); return; }
   if (!rules.filter(r=>r.type==='all').length) { alert('∀ (모든) 규칙을 먼저 정의해주세요'); return; }
 
   const allRules = rules.filter(r => r.type === 'all');
   const exRules  = rules.filter(r => r.type === 'some');
-  const known    = new Set(knownProps);
+  const known    = new Set(checked);
   const steps    = []; // {rule, derived}
 
   // forward chaining
@@ -300,7 +288,7 @@ function doInfer() {
 
   // 결과 렌더링
   const derivedSet = new Set(steps.map(s => s.B));
-  const initialSet = new Set(knownProps);
+  const initialSet = new Set(checked);
 
   let html = `<div class="result-box">`;
 
@@ -366,7 +354,6 @@ function doInfer() {
 
 // ── 키 이벤트 ──────────────────────────────────────────────────────
 document.getElementById('ruleB').addEventListener('keydown', e => { if(e.key==='Enter') addRule(); });
-document.getElementById('newProp').addEventListener('keydown', e => { if(e.key==='Enter') addProp(); });
 </script>
 </body>
 </html>
