@@ -20,17 +20,18 @@ body {
   background: #6b8c63;
   color: #f2f1df;
   font-family: 'KoPub World 돋움', 'Malgun Gothic', sans-serif;
-  padding: 20px 16px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px 16px;
   gap: 14px;
 }
 h1 { font-size: 1.15rem; color: #f2f1df; }
 .subtitle { font-size: .72rem; color: #b0c4a0; text-align: center; }
 
 .section {
-  width: 100%; max-width: 900px;
+  width: 100%; max-width: 780px;
   background: #567050;
   border: 2px solid #4d6646;
   border-radius: 12px;
@@ -40,462 +41,332 @@ h1 { font-size: 1.15rem; color: #f2f1df; }
   gap: 12px;
 }
 .sec-title {
-  font-size: .92rem;
-  font-weight: 700;
-  color: #f2f1df;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: .92rem; font-weight: 700; color: #f2f1df;
+  display: flex; align-items: center; gap: 8px;
 }
 .sec-num {
-  background: #e8a0aa;
-  color: #2a1a1a;
-  border-radius: 50%;
-  width: 22px; height: 22px;
+  background: #e8a0aa; color: #2a1a1a;
+  border-radius: 50%; width: 22px; height: 22px;
   display: flex; align-items: center; justify-content: center;
   font-size: .8rem; font-weight: 700; flex-shrink: 0;
 }
 
-/* 술어 태그 */
-.pred-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.pred-tag {
-  display: flex; align-items: center; gap: 4px;
-  background: #4d6646; border: 1px solid #3d5236;
-  border-radius: 16px; padding: 4px 10px;
-  font-size: .82rem;
-}
-.pred-del { cursor: pointer; color: #e8a0aa; font-weight: 700; }
-.pred-del:hover { color: #f0b0bc; }
-.add-row { display: flex; gap: 6px; align-items: center; }
+/* 입력 */
 input[type=text] {
-  padding: 6px 10px;
+  padding: 7px 10px;
   background: #f2f1df; color: #2a3820;
   border: 2px solid #4d6646; border-radius: 7px;
-  font-size: .85rem; font-family: inherit;
+  font-size: .88rem; font-family: inherit;
 }
 input[type=text]:focus { outline: none; border-color: #e8a0aa; }
+select {
+  padding: 7px 10px;
+  background: #f2f1df; color: #2a3820;
+  border: 2px solid #4d6646; border-radius: 7px;
+  font-size: .88rem; font-family: inherit;
+}
 
 /* 버튼 */
 button {
-  padding: 6px 14px; border: none; border-radius: 7px;
-  cursor: pointer; font-size: .82rem; font-family: inherit;
-  transition: background .12s;
+  padding: 7px 14px; border: none; border-radius: 7px;
+  cursor: pointer; font-size: .82rem; font-family: inherit; transition: background .12s;
 }
 .btn-add  { background: #4d6646; color: #f2f1df; }
-.btn-add:hover  { background: #3d5236; }
+.btn-add:hover { background: #3d5236; }
 .btn-main { background: #e8a0aa; color: #2a1a1a; font-weight: 700; }
 .btn-main:hover { background: #f0b0bc; }
-.btn-sm   { background: #425740; color: #c0d0b0; font-size: .75rem; padding: 4px 9px; }
-.btn-sm:hover { background: #374d35; }
+.btn-del  { background: #7a3a3a; color: #fcc; padding: 4px 9px; font-size: .75rem; }
+.btn-del:hover { background: #6a2a2a; }
 
-/* 학생 데이터 표 */
-.table-wrap { overflow-x: auto; }
-table { border-collapse: collapse; font-size: .82rem; }
-th, td {
-  border: 1px solid #4d6646;
-  padding: 6px 10px;
-  text-align: center;
-  white-space: nowrap;
+/* 규칙 입력 행 */
+.rule-input-row {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  background: #4d6646; border-radius: 8px; padding: 10px 12px;
 }
-thead th { background: #4d6646; color: #f2f1df; font-weight: 700; }
-thead th.pred-head { background: #3d5236; }
-tbody td { background: #f2f1df; color: #2a3820; }
-tbody tr:hover td { background: #e8f0d8; }
-tbody td:first-child { background: #e0edcc; font-weight: 700; color: #2a3820; text-align: left; }
-input[type=checkbox] { width: 16px; height: 16px; accent-color: #6b8c63; cursor: pointer; }
-.del-row-btn { background: #7a3a3a; color: #fcc; border: none; border-radius: 4px; padding: 2px 7px; cursor: pointer; font-size: .75rem; }
-.del-row-btn:hover { background: #6a2a2a; }
+.rule-input-row span { font-size: .88rem; color: #c0d0b0; }
 
-/* 분석 결과 */
-.stmt-group { display: flex; flex-direction: column; gap: 6px; }
-.stmt-label { font-size: .8rem; color: #b0c4a0; margin-bottom: 2px; font-weight: 700; }
-.stmt-card {
-  background: #4d6646;
-  border-radius: 8px;
-  padding: 10px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.stmt-card.universal  { border-left: 4px solid #4ade80; }
-.stmt-card.existential{ border-left: 4px solid #93c5fd; }
-.stmt-ko { font-size: .88rem; color: #f2f1df; }
-.stmt-logic { font-size: .78rem; color: #b0c4a0; font-family: monospace; }
-.stmt-ex { font-size: .74rem; color: #86d8a0; }
-.empty-msg { font-size: .8rem; color: #7a9a70; font-style: italic; }
-
-/* 추가 규칙 */
-.rule-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+/* 규칙 카드 */
+.rule-list { display: flex; flex-direction: column; gap: 6px; }
 .rule-card {
-  background: #4d6646;
-  border-left: 4px solid #e8a0aa;
-  border-radius: 8px;
-  padding: 8px 12px;
   display: flex; align-items: center; gap: 10px;
-  font-size: .85rem;
+  border-radius: 8px; padding: 10px 14px;
 }
-.rule-logic { color: #b0c4a0; font-family: monospace; font-size: .78rem; }
-select {
-  padding: 6px 10px;
-  background: #f2f1df; color: #2a3820;
-  border: 2px solid #4d6646; border-radius: 7px;
-  font-size: .85rem; font-family: inherit;
+.rule-card.universal  { background: #3d5830; border-left: 4px solid #4ade80; }
+.rule-card.existential{ background: #3a4a5a; border-left: 4px solid #93c5fd; }
+.rule-ko   { font-size: .88rem; color: #f2f1df; flex: 1; }
+.rule-ko b { color: #fde68a; }
+.rule-logic{ font-size: .76rem; color: #8aaa78; font-family: monospace; display: block; margin-top: 2px; }
+.rule-badge {
+  font-size: .7rem; padding: 2px 7px; border-radius: 10px;
+  background: #4ade8044; color: #4ade80; flex-shrink: 0;
 }
+.rule-badge.ex { background: #93c5fd33; color: #93c5fd; }
 
-/* 추론 입력 */
-.infer-setup { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; }
-.infer-checks { display: flex; flex-wrap: wrap; gap: 8px; }
-.check-item { display: flex; align-items: center; gap: 5px; font-size: .85rem; background: #4d6646; padding: 4px 10px; border-radius: 14px; }
+/* 속성 태그 (추론 입력) */
+.prop-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.prop-tag {
+  display: flex; align-items: center; gap: 4px;
+  background: #4d6646; border: 1px solid #3d5236;
+  border-radius: 14px; padding: 4px 10px; font-size: .85rem;
+}
+.prop-tag-del { cursor: pointer; color: #e8a0aa; font-size: .9rem; }
 
 /* 추론 결과 */
 .result-box {
-  background: #425740;
-  border-radius: 10px;
-  padding: 14px;
-  display: flex; flex-direction: column; gap: 10px;
+  background: #425740; border-radius: 10px; padding: 14px;
+  display: flex; flex-direction: column; gap: 12px;
 }
-.known-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.result-title { font-size: .8rem; color: #b0c4a0; margin-bottom: 4px; }
+
+.known-tags, .derived-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag {
-  padding: 4px 12px; border-radius: 12px; font-size: .82rem; font-weight: 700;
+  padding: 5px 13px; border-radius: 12px; font-size: .85rem; font-weight: 700;
 }
-.tag.known    { background: #4d7a5a; color: #c8f0d0; border: 1px solid #6aab7a; }
-.tag.derived  { background: #b87080; color: #ffe8ec; border: 1px solid #d09098; }
-.step-list { display: flex; flex-direction: column; gap: 6px; }
-.step-item {
-  background: #4d6646;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: .82rem;
-  border-left: 3px solid #e8a0aa;
+.tag.known   { background: #4d7a5a; color: #c8f0d0; border: 1px solid #6aab7a; }
+.tag.derived { background: #b87080; color: #ffe8ec; border: 1px solid #d09098; }
+
+/* 추론 체인 */
+.chain { display: flex; flex-direction: column; gap: 8px; }
+.chain-step {
+  background: #4d6646; border-left: 3px solid #e8a0aa;
+  border-radius: 8px; padding: 9px 13px;
 }
-.step-rule { color: #b0c4a0; font-size: .75rem; font-family: monospace; }
-.step-ko   { color: #f2f1df; margin-top: 2px; }
-.step-derive { color: #f0b8c0; font-weight: 700; }
-.exist-confirm { background: #3a5a6a; border-radius: 8px; padding: 8px 12px; font-size: .82rem; }
-.exist-confirm .label { color: #93c5fd; font-weight: 700; margin-bottom: 4px; }
-.two-col { display: flex; gap: 12px; flex-wrap: wrap; }
-.two-col > * { flex: 1; min-width: 200px; }
+.chain-rule  { font-size: .75rem; color: #8aaa78; font-family: monospace; }
+.chain-ko    { font-size: .85rem; color: #f2f1df; margin-top: 3px; }
+.chain-ko .arrow { color: #e8a0aa; font-weight: 700; margin: 0 4px; }
+.chain-ko .new   { color: #fde68a; font-weight: 700; }
+
+/* ∃ 참고 */
+.ex-note {
+  background: #3a4a5a; border-radius: 8px; padding: 10px 13px;
+}
+.ex-note-title { font-size: .78rem; color: #93c5fd; font-weight: 700; margin-bottom: 5px; }
+.ex-note-item  { font-size: .82rem; color: #c0d0e0; margin-top: 4px; }
+
+.empty-msg { font-size: .8rem; color: #7a9a70; font-style: italic; }
+.tip { font-size: .7rem; color: #8aaa78; }
 </style>
 </head>
 <body>
 
 <h1>🧠 술어 논리 추론 도구</h1>
-<p class="subtitle">학생 데이터를 입력하면 데이터에서 모든/어떤 명제를 자동 도출하고<br>새 개체를 입력하면 ∀ 규칙으로 추론합니다</p>
+<p class="subtitle">규칙을 정의하고 새 개체에 알려진 속성을 입력하면<br>∀ 규칙을 적용해 추론 가능한 사실을 자동으로 도출합니다</p>
 
-<!-- ① 속성(술어) + 학생 데이터 -->
+<!-- ① 규칙 정의 -->
 <div class="section">
-  <div class="sec-title"><span class="sec-num">1</span> 속성(술어) 정의 및 학생 데이터</div>
+  <div class="sec-title"><span class="sec-num">1</span> 규칙 정의</div>
+
+  <div class="rule-input-row">
+    <select id="quantifier">
+      <option value="all">모든</option>
+      <option value="some">어떤</option>
+    </select>
+    <input type="text" id="ruleA" placeholder="A 속성 (예: 안경씀)" style="width:150px">
+    <span>은(는)</span>
+    <input type="text" id="ruleB" placeholder="B 속성 (예: 중학교)" style="width:150px">
+    <span>이다</span>
+    <button class="btn-add" onclick="addRule()">+ 추가</button>
+  </div>
+  <div class="tip">∀ (모든) 규칙만 추론에 사용됩니다. ∃ (어떤) 규칙은 참고용으로 표시됩니다.</div>
+
+  <div class="rule-list" id="ruleList">
+    <div class="empty-msg">아직 정의된 규칙이 없습니다.</div>
+  </div>
+</div>
+
+<!-- ② 새 개체로 추론 -->
+<div class="section">
+  <div class="sec-title"><span class="sec-num">2</span> 새 개체로 추론</div>
+
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <input type="text" id="indName" placeholder="이름 (예: 민수)" style="width:130px">
+    <span style="font-size:.85rem;color:#b0c4a0">의 알려진 속성:</span>
+  </div>
 
   <div>
-    <div style="font-size:.78rem;color:#b0c4a0;margin-bottom:6px">속성 목록</div>
-    <div class="pred-tags" id="predTags"></div>
-    <div class="add-row" style="margin-top:8px">
-      <input type="text" id="newPred" placeholder="새 속성 입력 (예: 안경씀)" style="width:180px">
-      <button class="btn-add" onclick="addPred()">+ 추가</button>
+    <div class="prop-tags" id="propTags">
+      <div class="empty-msg">속성을 추가하세요</div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <input type="text" id="newProp" placeholder="속성 입력 (예: 안경씀)" style="width:180px">
+      <button class="btn-add" onclick="addProp()">+ 속성 추가</button>
     </div>
   </div>
 
-  <div class="table-wrap">
-    <table id="dataTable"></table>
-  </div>
-
-  <div class="add-row">
-    <input type="text" id="newStudent" placeholder="학생 이름" style="width:120px">
-    <button class="btn-add" onclick="addStudent()">+ 학생 추가</button>
-    <button class="btn-main" onclick="analyze()" style="margin-left:auto">🔍 데이터 분석</button>
-  </div>
+  <button class="btn-main" onclick="doInfer()" style="align-self:flex-start">▶ 추론하기</button>
 </div>
 
-<!-- ② 데이터에서 도출된 명제 -->
-<div class="section" id="analysisSection" style="display:none">
-  <div class="sec-title"><span class="sec-num">2</span> 데이터에서 도출된 명제</div>
-  <div class="two-col">
-    <div>
-      <div class="stmt-label">∀ (모든) — 데이터에서 항상 참인 것</div>
-      <div class="stmt-group" id="universalList"></div>
-    </div>
-    <div>
-      <div class="stmt-label">∃ (어떤) — 일부에서만 참인 것</div>
-      <div class="stmt-group" id="existentialList"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ③ 추가 ∀ 규칙 -->
-<div class="section" id="ruleSection" style="display:none">
-  <div class="sec-title"><span class="sec-num">3</span> 사용자 정의 ∀ 규칙 추가 <span style="font-size:.72rem;color:#b0c4a0;font-weight:400">(데이터 밖의 일반 규칙)</span></div>
-  <div class="rule-row">
-    <span style="font-size:.85rem">모든</span>
-    <select id="ruleAnte"></select>
-    <span style="font-size:.85rem">는(은)</span>
-    <select id="ruleCons"></select>
-    <span style="font-size:.85rem">다</span>
-    <button class="btn-add" onclick="addRule()">+ 규칙 추가</button>
-  </div>
-  <div class="stmt-group" id="ruleList"></div>
-</div>
-
-<!-- ④ 새 개체 추론 -->
-<div class="section" id="inferSection" style="display:none">
-  <div class="sec-title"><span class="sec-num">4</span> 새 개체 입력 → 추론</div>
-  <div class="infer-setup">
-    <input type="text" id="inferName" placeholder="이름 (예: 지민)" style="width:130px">
-    <div>
-      <div style="font-size:.75rem;color:#b0c4a0;margin-bottom:5px">알고 있는 속성 선택</div>
-      <div class="infer-checks" id="inferChecks"></div>
-    </div>
-    <button class="btn-main" onclick="doInfer()" style="align-self:flex-end">▶ 추론하기</button>
-  </div>
-  <div id="inferResult"></div>
+<!-- ③ 추론 결과 -->
+<div class="section" id="resultSection" style="display:none">
+  <div class="sec-title"><span class="sec-num">3</span> 추론 결과</div>
+  <div id="resultBox"></div>
 </div>
 
 <script>
 'use strict';
 
-// ── 상태 ──────────────────────────────────────────────────────────
-let predicates = []; // 빈 상태로 시작 — 사용자가 직접 추가
-let students = [];   // 빈 상태로 시작 — 사용자가 직접 추가
-let userRules = [];
-let derivedUniversals = [];
+let rules = []; // {type:'all'|'some', A, B}
+let knownProps = []; // string[]
 
-// ── 술어 관리 ──────────────────────────────────────────────────────
-function renderPreds() {
-  const el = document.getElementById('predTags');
-  el.innerHTML = predicates.map(p=>`
-    <span class="pred-tag">
-      ${p}
-      <span class="pred-del" onclick="delPred('${p}')">✕</span>
-    </span>`).join('');
-}
-
-function addPred() {
-  const v = document.getElementById('newPred').value.trim();
-  if (!v || predicates.includes(v)) return;
-  predicates.push(v);
-  students.forEach(s => { if (!(v in s.props)) s.props[v] = 0; });
-  document.getElementById('newPred').value = '';
-  renderAll();
-}
-
-function delPred(p) {
-  predicates = predicates.filter(x => x !== p);
-  students.forEach(s => delete s.props[p]);
-  renderAll();
-}
-
-// ── 학생 표 ────────────────────────────────────────────────────────
-function renderTable() {
-  const tbl = document.getElementById('dataTable');
-  let html = '<thead><tr><th>학생</th>';
-  predicates.forEach(p => { html += `<th class="pred-head">${p}</th>`; });
-  html += '<th></th></tr></thead><tbody>';
-  students.forEach((s, si) => {
-    html += `<tr><td>${s.name}</td>`;
-    predicates.forEach(p => {
-      html += `<td><input type="checkbox" ${s.props[p]?'checked':''} onchange="toggleProp(${si},'${p}',this.checked)"></td>`;
-    });
-    html += `<td><button class="del-row-btn" onclick="delStudent(${si})">삭제</button></td></tr>`;
-  });
-  html += '</tbody>';
-  tbl.innerHTML = html;
-}
-
-function addStudent() {
-  const v = document.getElementById('newStudent').value.trim();
-  if (!v) return;
-  const props = {};
-  predicates.forEach(p => props[p] = 0);
-  students.push({name: v, props});
-  document.getElementById('newStudent').value = '';
-  renderTable();
-}
-
-function delStudent(i) { students.splice(i, 1); renderTable(); }
-
-function toggleProp(si, p, val) { students[si].props[p] = val ? 1 : 0; }
-
-// ── 데이터 분석 — 학생→속성 패턴만 ─────────────────────────────────
-function analyzeData() {
-  const universals = [], existentials = [];
-  if (!students.length) return {universals, existentials};
-  for (const pred of predicates) {
-    const withPred = students.filter(s => s.props[pred]);
-    if (withPred.length === students.length)
-      universals.push({cons: pred, examples: students.map(s=>s.name)});
-    else if (withPred.length > 0)
-      existentials.push({cons: pred, examples: withPred.map(s=>s.name)});
-  }
-  return {universals, existentials};
-}
-
-function analyze() {
-  if (!students.length) { alert('학생을 먼저 추가해주세요'); return; }
-  if (!predicates.length) { alert('속성을 먼저 추가해주세요'); return; }
-  const {universals, existentials} = analyzeData();
-  derivedUniversals = universals;
-
-  // ∀ 목록
-  const ul = document.getElementById('universalList');
-  ul.innerHTML = universals.length ? universals.map(u=>`
-    <div class="stmt-card universal">
-      <div class="stmt-ko">모든 <b>학생</b>은 <b>${u.cons}</b>이다</div>
-      <div class="stmt-logic">∀x (학생(x) → ${u.cons}(x))</div>
-      <div class="stmt-ex">해당: ${u.examples.join(', ')}</div>
-    </div>`).join('') : '<div class="empty-msg">모든 학생에게 해당하는 속성 없음</div>';
-
-  // ∃ 목록
-  const el = document.getElementById('existentialList');
-  el.innerHTML = existentials.length ? existentials.map(e=>`
-    <div class="stmt-card existential">
-      <div class="stmt-ko">어떤 <b>학생</b>은 <b>${e.cons}</b>이다</div>
-      <div class="stmt-logic">∃x (학생(x) ∧ ${e.cons}(x))</div>
-      <div class="stmt-ex">예시: ${e.examples.join(', ')}</div>
-    </div>`).join('') : '<div class="empty-msg">일부에게만 해당하는 속성 없음</div>';
-
-  // 규칙 선택박스 갱신
-  ['ruleAnte','ruleCons'].forEach(id => {
-    const sel = document.getElementById(id);
-    const cur = sel.value;
-    sel.innerHTML = predicates.map(p=>`<option value="${p}" ${p===cur?'selected':''}>${p}</option>`).join('');
-  });
-
-  // 추론 체크박스 갱신 (학생은 묵시적이므로 속성만)
-  const ic = document.getElementById('inferChecks');
-  ic.innerHTML = predicates.map(p=>`
-    <label class="check-item">
-      <input type="checkbox" value="${p}"> ${p}
-    </label>`).join('');
-
-  document.getElementById('analysisSection').style.display = '';
-  document.getElementById('ruleSection').style.display = '';
-  document.getElementById('inferSection').style.display = '';
-  document.getElementById('inferResult').innerHTML = '';
-}
-
-// ── 규칙 관리 ──────────────────────────────────────────────────────
+// ── 규칙 추가 ──────────────────────────────────────────────────────
 function addRule() {
-  const ante = document.getElementById('ruleAnte').value;
-  const cons = document.getElementById('ruleCons').value;
-  if (ante === cons) return;
-  if (userRules.find(r => r.ante===ante && r.cons===cons)) return;
-  userRules.push({ante, cons});
+  const type = document.getElementById('quantifier').value;
+  const A = document.getElementById('ruleA').value.trim();
+  const B = document.getElementById('ruleB').value.trim();
+  if (!A || !B) { alert('A와 B 속성을 모두 입력해주세요'); return; }
+  if (A === B) { alert('A와 B가 같습니다'); return; }
+  if (rules.find(r => r.type===type && r.A===A && r.B===B)) { alert('이미 있는 규칙입니다'); return; }
+  rules.push({type, A, B});
+  document.getElementById('ruleA').value = '';
+  document.getElementById('ruleB').value = '';
   renderRules();
 }
 
+function delRule(i) { rules.splice(i, 1); renderRules(); }
+
 function renderRules() {
   const el = document.getElementById('ruleList');
-  el.innerHTML = userRules.length ? userRules.map((r,i)=>`
-    <div class="rule-card">
-      <div>
-        <span>모든 <b>${r.ante}</b>은(는) <b>${r.cons}</b>이다</span>
-        <div class="rule-logic">∀x (${r.ante}(x) → ${r.cons}(x))</div>
+  if (!rules.length) { el.innerHTML = '<div class="empty-msg">아직 정의된 규칙이 없습니다.</div>'; return; }
+  el.innerHTML = rules.map((r, i) => {
+    const isAll = r.type === 'all';
+    const ko = isAll
+      ? `모든 <b>${r.A}</b>은(는) <b>${r.B}</b>이다`
+      : `어떤 <b>${r.A}</b>은(는) <b>${r.B}</b>이다`;
+    const logic = isAll
+      ? `∀x (${r.A}(x) → ${r.B}(x))`
+      : `∃x (${r.A}(x) ∧ ${r.B}(x))`;
+    return `<div class="rule-card ${isAll?'universal':'existential'}">
+      <div style="flex:1">
+        <div class="rule-ko">${ko}</div>
+        <span class="rule-logic">${logic}</span>
       </div>
-      <button class="btn-sm" onclick="delRule(${i})" style="margin-left:auto">삭제</button>
-    </div>`).join('') : '<div class="empty-msg">추가된 규칙 없음</div>';
+      <span class="rule-badge ${isAll?'':'ex'}">${isAll?'∀ 추론 가능':'∃ 참고'}</span>
+      <button class="btn-del" onclick="delRule(${i})">삭제</button>
+    </div>`;
+  }).join('');
 }
 
-function delRule(i) { userRules.splice(i,1); renderRules(); }
+// ── 속성 추가 ──────────────────────────────────────────────────────
+function addProp() {
+  const v = document.getElementById('newProp').value.trim();
+  if (!v) return;
+  if (knownProps.includes(v)) { alert('이미 추가된 속성입니다'); return; }
+  knownProps.push(v);
+  document.getElementById('newProp').value = '';
+  renderProps();
+}
+
+function delProp(p) {
+  knownProps = knownProps.filter(x => x !== p);
+  renderProps();
+}
+
+function renderProps() {
+  const el = document.getElementById('propTags');
+  if (!knownProps.length) { el.innerHTML = '<div class="empty-msg">속성을 추가하세요</div>'; return; }
+  el.innerHTML = knownProps.map(p => `
+    <span class="prop-tag">
+      ${p}
+      <span class="prop-tag-del" onclick="delProp('${p}')">✕</span>
+    </span>`).join('');
+}
 
 // ── 추론 ──────────────────────────────────────────────────────────
 function doInfer() {
-  const name = document.getElementById('inferName').value.trim() || '???';
-  const checked = [...document.querySelectorAll('#inferChecks input:checked')].map(el=>el.value);
-  if (!checked.length) { alert('속성을 하나 이상 선택해주세요'); return; }
+  const name = document.getElementById('indName').value.trim() || '이 개체';
+  if (!knownProps.length) { alert('알려진 속성을 입력해주세요'); return; }
+  if (!rules.filter(r=>r.type==='all').length) { alert('∀ (모든) 규칙을 먼저 정의해주세요'); return; }
 
-  const known = new Set(checked);
-  const steps = [];
+  const allRules = rules.filter(r => r.type === 'all');
+  const exRules  = rules.filter(r => r.type === 'some');
+  const known    = new Set(knownProps);
+  const steps    = []; // {rule, derived}
 
-  // 1. 데이터에서 도출된 ∀ 규칙: 학생→속성 (이 개체는 묵시적으로 학생)
-  for (const u of derivedUniversals) {
-    if (!known.has(u.cons)) {
-      known.add(u.cons);
-      steps.push({ante:'학생', cons:u.cons, source:'데이터 기반 ∀ 규칙'});
-    }
-  }
-
-  // 2. 사용자 정의 ∀ 규칙: 속성→속성 (forward chaining)
+  // forward chaining
   let changed = true;
   while (changed) {
     changed = false;
-    for (const rule of userRules) {
-      if (known.has(rule.ante) && !known.has(rule.cons)) {
-        known.add(rule.cons);
-        steps.push({...rule, source:'사용자 정의 규칙'});
+    for (const rule of allRules) {
+      if (known.has(rule.A) && !known.has(rule.B)) {
+        known.add(rule.B);
+        steps.push(rule);
         changed = true;
       }
     }
   }
 
-  // ∃ 확인: 어떤 속성이 checked에 있으면 해당 ∃ 명제의 예시
-  const {existentials} = analyzeData();
-  const confirmed = existentials.filter(e => checked.includes(e.cons));
+  // ∃ 참고: 알려진 속성 중 ∃ 규칙 A에 해당하는 것
+  const exNotes = exRules.filter(r => known.has(r.A));
 
   // 결과 렌더링
-  const derivedProps = new Set(steps.map(s=>s.cons));
-  const initialProps = new Set(checked);
+  const derivedSet = new Set(steps.map(s => s.B));
+  const initialSet = new Set(knownProps);
 
   let html = `<div class="result-box">`;
 
+  // 알고 있던 것
   html += `<div>
-    <div style="font-size:.78rem;color:#b0c4a0;margin-bottom:5px">📌 ${name}에 대해 알 수 있는 것</div>
-    <div class="known-tags">
-      <span class="tag known">학생(${name})</span>`;
-  [...known].forEach(p => {
-    const isDerived = derivedProps.has(p) && !initialProps.has(p);
-    html += `<span class="tag ${isDerived?'derived':'known'}">${p}(${name})</span>`;
+    <div class="result-title">처음부터 알고 있던 것</div>
+    <div class="known-tags">`;
+  [...initialSet].forEach(p => {
+    html += `<span class="tag known">${p}(${name})</span>`;
   });
-  html += `</div>
-    <div style="font-size:.72rem;color:#8aaa78;margin-top:5px">
-      초록 = 처음부터 알던 것 &nbsp;|&nbsp; 분홍 = 추론으로 새로 알게 된 것
-    </div></div>`;
+  html += `</div></div>`;
 
   if (steps.length) {
+    // 추론 체인
     html += `<div>
-      <div style="font-size:.78rem;color:#b0c4a0;margin-bottom:5px">📎 추론 과정 (∀ 규칙 적용)</div>
-      <div class="step-list">`;
+      <div class="result-title">📎 추론 과정</div>
+      <div class="chain">`;
     steps.forEach(s => {
-      html += `<div class="step-item">
-        <div class="step-rule">∀x (${s.ante}(x) → ${s.cons}(x)) &nbsp;[${s.source}]</div>
-        <div class="step-ko">
-          ${s.ante}(${name}) 참 →
-          <span class="step-derive">${s.cons}(${name}) 도출!</span>
-          &nbsp;→&nbsp; "${name}는 ${s.cons}이다"
+      html += `<div class="chain-step">
+        <div class="chain-rule">∀x (${s.A}(x) → ${s.B}(x))</div>
+        <div class="chain-ko">
+          <b>${s.A}</b>(${name}) 참
+          <span class="arrow">→</span>
+          <span class="new">${s.B}(${name}) 도출!</span>
+          &nbsp;→&nbsp; "${name}은(는) <b>${s.B}</b>이다"
         </div>
       </div>`;
     });
     html += `</div></div>`;
+
+    // 새로 알게 된 것
+    html += `<div>
+      <div class="result-title">추론으로 새로 알게 된 것</div>
+      <div class="derived-tags">`;
+    [...derivedSet].forEach(p => {
+      html += `<span class="tag derived">${p}(${name})</span>`;
+    });
+    html += `</div></div>`;
   } else {
-    html += `<div style="font-size:.82rem;color:#7a9a70">적용 가능한 ∀ 규칙이 없어 새로 도출된 사실이 없습니다.</div>`;
+    html += `<div style="font-size:.85rem;color:#8aaa78">
+      적용 가능한 ∀ 규칙이 없어 새로 도출된 사실이 없습니다.
+    </div>`;
   }
 
-  if (confirmed.length) {
-    html += `<div class="exist-confirm">
-      <div class="label">✅ ∃ 확인 — ${name}가 '어떤 학생' 명제의 실제 예시입니다</div>`;
-    confirmed.forEach(e => {
-      html += `<div style="font-size:.82rem;margin-top:4px">
-        "어떤 <b>학생</b>은 <b>${e.cons}</b>이다"
-        <span style="color:#93c5fd">[∃x (학생(x) ∧ ${e.cons}(x))]</span>
-        → ${name}가 바로 그 예시!
+  // ∃ 참고
+  if (exNotes.length) {
+    html += `<div class="ex-note">
+      <div class="ex-note-title">∃ 참고 — 확인할 수 없지만 가능한 사실</div>`;
+    exNotes.forEach(r => {
+      html += `<div class="ex-note-item">
+        "어떤 <b>${r.A}</b>은(는) <b>${r.B}</b>이다"
+        → ${name}이(가) ${r.A}이므로, <b>${r.B}</b>일 수도 있습니다
+        <span style="color:#6a8a9a;font-size:.74rem">(∃ 규칙은 확정적 추론 불가)</span>
       </div>`;
     });
     html += `</div>`;
   }
 
   html += `</div>`;
-  document.getElementById('inferResult').innerHTML = html;
+  document.getElementById('resultBox').innerHTML = html;
+  document.getElementById('resultSection').style.display = '';
 }
 
-// ── 전체 렌더 ──────────────────────────────────────────────────────
-function renderAll() {
-  renderPreds();
-  renderTable();
-  renderRules();
-}
-
-document.getElementById('newPred').addEventListener('keydown', e => { if(e.key==='Enter') addPred(); });
-document.getElementById('newStudent').addEventListener('keydown', e => { if(e.key==='Enter') addStudent(); });
-
-renderAll();
+// ── 키 이벤트 ──────────────────────────────────────────────────────
+document.getElementById('ruleB').addEventListener('keydown', e => { if(e.key==='Enter') addRule(); });
+document.getElementById('newProp').addEventListener('keydown', e => { if(e.key==='Enter') addProp(); });
 </script>
 </body>
 </html>
