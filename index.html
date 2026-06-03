@@ -253,16 +253,10 @@ select {
 'use strict';
 
 // ── 상태 ──────────────────────────────────────────────────────────
-let predicates = ['학생', '수업듣다', '안경씀', '서울출신'];
-let students = [
-  {name:'민수', props:{학생:1, 수업듣다:1, 안경씀:1, 서울출신:1}},
-  {name:'영희', props:{학생:1, 수업듣다:1, 안경씀:0, 서울출신:0}},
-  {name:'철수', props:{학생:1, 수업듣다:1, 안경씀:1, 서울출신:0}},
-  {name:'지수', props:{학생:1, 수업듣다:1, 안경씀:0, 서울출신:0}},
-  {name:'현우', props:{학생:1, 수업듣다:1, 안경씀:0, 서울출신:1}},
-];
-let userRules = []; // {ante, cons}
-let derivedUniversals = []; // from analysis
+let predicates = []; // 빈 상태로 시작 — 사용자가 직접 추가
+let students = [];   // 빈 상태로 시작 — 사용자가 직접 추가
+let userRules = [];
+let derivedUniversals = [];
 
 // ── 술어 관리 ──────────────────────────────────────────────────────
 function renderPreds() {
@@ -292,7 +286,7 @@ function delPred(p) {
 // ── 학생 표 ────────────────────────────────────────────────────────
 function renderTable() {
   const tbl = document.getElementById('dataTable');
-  let html = '<thead><tr><th>이름</th>';
+  let html = '<thead><tr><th>학생</th>';
   predicates.forEach(p => { html += `<th class="pred-head">${p}</th>`; });
   html += '<th></th></tr></thead><tbody>';
   students.forEach((s, si) => {
@@ -320,25 +314,23 @@ function delStudent(i) { students.splice(i, 1); renderTable(); }
 
 function toggleProp(si, p, val) { students[si].props[p] = val ? 1 : 0; }
 
-// ── 데이터 분석 ────────────────────────────────────────────────────
+// ── 데이터 분석 — 학생→속성 패턴만 ─────────────────────────────────
 function analyzeData() {
   const universals = [], existentials = [];
-  for (const ante of predicates) {
-    for (const cons of predicates) {
-      if (ante === cons) continue;
-      const withAnte = students.filter(s => s.props[ante]);
-      if (!withAnte.length) continue;
-      const withBoth = withAnte.filter(s => s.props[cons]);
-      if (withBoth.length === withAnte.length)
-        universals.push({ante, cons, examples: withAnte.map(s=>s.name)});
-      else if (withBoth.length > 0)
-        existentials.push({ante, cons, examples: withBoth.map(s=>s.name)});
-    }
+  if (!students.length) return {universals, existentials};
+  for (const pred of predicates) {
+    const withPred = students.filter(s => s.props[pred]);
+    if (withPred.length === students.length)
+      universals.push({cons: pred, examples: students.map(s=>s.name)});
+    else if (withPred.length > 0)
+      existentials.push({cons: pred, examples: withPred.map(s=>s.name)});
   }
   return {universals, existentials};
 }
 
 function analyze() {
+  if (!students.length) { alert('학생을 먼저 추가해주세요'); return; }
+  if (!predicates.length) { alert('속성을 먼저 추가해주세요'); return; }
   const {universals, existentials} = analyzeData();
   derivedUniversals = universals;
 
@@ -346,19 +338,19 @@ function analyze() {
   const ul = document.getElementById('universalList');
   ul.innerHTML = universals.length ? universals.map(u=>`
     <div class="stmt-card universal">
-      <div class="stmt-ko">모든 <b>${u.ante}</b>는 <b>${u.cons}</b>다</div>
-      <div class="stmt-logic">∀x (${u.ante}(x) → ${u.cons}(x))</div>
+      <div class="stmt-ko">모든 <b>학생</b>은 <b>${u.cons}</b>이다</div>
+      <div class="stmt-logic">∀x (학생(x) → ${u.cons}(x))</div>
       <div class="stmt-ex">해당: ${u.examples.join(', ')}</div>
-    </div>`).join('') : '<div class="empty-msg">해당 없음</div>';
+    </div>`).join('') : '<div class="empty-msg">모든 학생에게 해당하는 속성 없음</div>';
 
   // ∃ 목록
   const el = document.getElementById('existentialList');
   el.innerHTML = existentials.length ? existentials.map(e=>`
     <div class="stmt-card existential">
-      <div class="stmt-ko">어떤 <b>${e.ante}</b>는 <b>${e.cons}</b>다</div>
-      <div class="stmt-logic">∃x (${e.ante}(x) ∧ ${e.cons}(x))</div>
+      <div class="stmt-ko">어떤 <b>학생</b>은 <b>${e.cons}</b>이다</div>
+      <div class="stmt-logic">∃x (학생(x) ∧ ${e.cons}(x))</div>
       <div class="stmt-ex">예시: ${e.examples.join(', ')}</div>
-    </div>`).join('') : '<div class="empty-msg">해당 없음</div>';
+    </div>`).join('') : '<div class="empty-msg">일부에게만 해당하는 속성 없음</div>';
 
   // 규칙 선택박스 갱신
   ['ruleAnte','ruleCons'].forEach(id => {
@@ -367,7 +359,7 @@ function analyze() {
     sel.innerHTML = predicates.map(p=>`<option value="${p}" ${p===cur?'selected':''}>${p}</option>`).join('');
   });
 
-  // 추론 체크박스 갱신
+  // 추론 체크박스 갱신 (학생은 묵시적이므로 속성만)
   const ic = document.getElementById('inferChecks');
   ic.innerHTML = predicates.map(p=>`
     <label class="check-item">
@@ -395,7 +387,7 @@ function renderRules() {
   el.innerHTML = userRules.length ? userRules.map((r,i)=>`
     <div class="rule-card">
       <div>
-        <span>모든 <b>${r.ante}</b>는 <b>${r.cons}</b>다</span>
+        <span>모든 <b>${r.ante}</b>은(는) <b>${r.cons}</b>이다</span>
         <div class="rule-logic">∀x (${r.ante}(x) → ${r.cons}(x))</div>
       </div>
       <button class="btn-sm" onclick="delRule(${i})" style="margin-left:auto">삭제</button>
@@ -413,39 +405,43 @@ function doInfer() {
   const known = new Set(checked);
   const steps = [];
 
-  // 사용 가능한 ∀ 규칙: 데이터 도출 + 사용자 정의
-  const allRules = [
-    ...derivedUniversals.map(u=>({ante:u.ante,cons:u.cons,source:'데이터'})),
-    ...userRules.map(r=>({...r,source:'사용자 규칙'})),
-  ];
+  // 1. 데이터에서 도출된 ∀ 규칙: 학생→속성 (이 개체는 묵시적으로 학생)
+  for (const u of derivedUniversals) {
+    if (!known.has(u.cons)) {
+      known.add(u.cons);
+      steps.push({ante:'학생', cons:u.cons, source:'데이터 기반 ∀ 규칙'});
+    }
+  }
 
+  // 2. 사용자 정의 ∀ 규칙: 속성→속성 (forward chaining)
   let changed = true;
   while (changed) {
     changed = false;
-    for (const rule of allRules) {
+    for (const rule of userRules) {
       if (known.has(rule.ante) && !known.has(rule.cons)) {
         known.add(rule.cons);
-        steps.push(rule);
+        steps.push({...rule, source:'사용자 정의 규칙'});
         changed = true;
       }
     }
   }
 
-  // ∃ 확인: 어떤 ∃ 명제를 이 개체가 확인해주나?
+  // ∃ 확인: 어떤 속성이 checked에 있으면 해당 ∃ 명제의 예시
   const {existentials} = analyzeData();
-  const confirmed = existentials.filter(e => known.has(e.ante) && known.has(e.cons));
+  const confirmed = existentials.filter(e => checked.includes(e.cons));
 
   // 결과 렌더링
-  const derivedProps = steps.map(s=>s.cons);
-  const initialProps = checked;
+  const derivedProps = new Set(steps.map(s=>s.cons));
+  const initialProps = new Set(checked);
 
   let html = `<div class="result-box">`;
 
   html += `<div>
     <div style="font-size:.78rem;color:#b0c4a0;margin-bottom:5px">📌 ${name}에 대해 알 수 있는 것</div>
-    <div class="known-tags">`;
+    <div class="known-tags">
+      <span class="tag known">학생(${name})</span>`;
   [...known].forEach(p => {
-    const isDerived = derivedProps.includes(p) && !initialProps.includes(p);
+    const isDerived = derivedProps.has(p) && !initialProps.has(p);
     html += `<span class="tag ${isDerived?'derived':'known'}">${p}(${name})</span>`;
   });
   html += `</div>
@@ -457,13 +453,13 @@ function doInfer() {
     html += `<div>
       <div style="font-size:.78rem;color:#b0c4a0;margin-bottom:5px">📎 추론 과정 (∀ 규칙 적용)</div>
       <div class="step-list">`;
-    steps.forEach((s,i) => {
+    steps.forEach(s => {
       html += `<div class="step-item">
         <div class="step-rule">∀x (${s.ante}(x) → ${s.cons}(x)) &nbsp;[${s.source}]</div>
         <div class="step-ko">
-          ${s.ante}(${name}) 이(가) 참 →
+          ${s.ante}(${name}) 참 →
           <span class="step-derive">${s.cons}(${name}) 도출!</span>
-          &nbsp;→&nbsp; "${name}는 ${s.cons}다"
+          &nbsp;→&nbsp; "${name}는 ${s.cons}이다"
         </div>
       </div>`;
     });
@@ -474,11 +470,11 @@ function doInfer() {
 
   if (confirmed.length) {
     html += `<div class="exist-confirm">
-      <div class="label">✅ ∃ 확인 — ${name}가 이 '어떤' 명제의 실제 예시입니다</div>`;
+      <div class="label">✅ ∃ 확인 — ${name}가 '어떤 학생' 명제의 실제 예시입니다</div>`;
     confirmed.forEach(e => {
       html += `<div style="font-size:.82rem;margin-top:4px">
-        "어떤 <b>${e.ante}</b>는 <b>${e.cons}</b>다"
-        <span style="color:#93c5fd">[∃x (${e.ante}(x) ∧ ${e.cons}(x))]</span>
+        "어떤 <b>학생</b>은 <b>${e.cons}</b>이다"
+        <span style="color:#93c5fd">[∃x (학생(x) ∧ ${e.cons}(x))]</span>
         → ${name}가 바로 그 예시!
       </div>`;
     });
